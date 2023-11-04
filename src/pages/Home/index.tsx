@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
@@ -14,12 +14,13 @@ import {
   StartButton,
   TaskInput,
 } from './styles'
+import { differenceInSeconds } from 'date-fns'
 
 const newCycleValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe uma tarefa'),
   minutesAmount: zod
     .number()
-    .min(5, 'O ciclo precisa ter no mínimo 5 minutos')
+    .min(1, 'O ciclo precisa ter no mínimo 5 minutos')
     .max(60, 'O ciclo precisa ter máximo 60 minutos'),
 })
 
@@ -32,7 +33,7 @@ interface Cycle {
   id: string
   task: string
   minutesAmount: number
-  createdAt: Date
+  startDate: Date
 }
 
 type newCycleFormData = zod.infer<typeof newCycleValidationSchema>
@@ -50,22 +51,6 @@ export function Home() {
     },
   })
 
-  function handleCreateANewCycle(data: newCycleFormData) {
-    const id = String(new Date().getTime())
-
-    const newCycle: Cycle = {
-      id,
-      task: data.task,
-      minutesAmount: data.minutesAmount,
-      createdAt: new Date(),
-    }
-
-    setCycles((state) => [...state, newCycle])
-    setActiveCycleId(id)
-
-    reset()
-  }
-
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
@@ -79,6 +64,30 @@ export function Home() {
 
   const task = watch('task')
   const isSubmitDisabled = !task
+
+  function handleCreateANewCycle(data: newCycleFormData) {
+    const id = String(new Date().getTime())
+
+    const newCycle: Cycle = {
+      id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+      startDate: new Date(),
+    }
+
+    setCycles((state) => [...state, newCycle])
+    setActiveCycleId(id)
+
+    reset()
+  }
+
+  useEffect(() => {
+    if (activeCycle) {
+      setInterval(() => {
+        setPassedSeconds(differenceInSeconds(new Date(), activeCycle.startDate))
+      }, 1000)
+    }
+  }, [activeCycle])
 
   return (
     <HomeContainer>
@@ -105,7 +114,7 @@ export function Home() {
             type="number"
             id="minutesAmount"
             placeholder="00"
-            step={5}
+            step={1}
             max={60}
             {...register('minutesAmount', { valueAsNumber: true })}
           />
