@@ -77,17 +77,26 @@ export function Home() {
 
     setCycles((state) => [...state, newCycle])
     setActiveCycleId(id)
+    setPassedSeconds(0)
 
     reset()
   }
 
   useEffect(() => {
+    let interval: number
+
     if (activeCycle) {
-      setInterval(() => {
+      interval = setInterval(() => {
         setPassedSeconds(differenceInSeconds(new Date(), activeCycle.startDate))
       }, 1000)
+
+      document.title = `${minutes}:${seconds}`
     }
-  }, [activeCycle])
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [activeCycle, minutes, seconds])
 
   return (
     <HomeContainer>
