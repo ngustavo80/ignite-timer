@@ -36,21 +36,33 @@ export function Home() {
     },
   })
 
-  const { handleSubmit, watch /* reset */ } = newCycleForm
+  const { handleSubmit, watch, reset } = newCycleForm
 
   const task = watch('task')
   const isSubmitDisabled = !task
 
+  function handleCreateANewCycle(data: newCycleFormData) {
+    createNewCycle(data)
+    reset()
+  }
+
+  function handleInteruptCurrentCycle() {
+    interuptCurrentCycle()
+  }
+
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(createNewCycle)}>
+      <form onSubmit={handleSubmit(handleCreateANewCycle)}>
         <FormProvider {...newCycleForm}>
           <NewCycleForm />
         </FormProvider>
         <Countdown />
 
         {activeCycle ? (
-          <StopCountdownButton type="button" onClick={interuptCurrentCycle}>
+          <StopCountdownButton
+            type="button"
+            onClick={handleInteruptCurrentCycle}
+          >
             <HandPalm size={24} />
             Interromper
           </StopCountdownButton>
