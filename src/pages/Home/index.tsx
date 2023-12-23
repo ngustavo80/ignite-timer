@@ -15,7 +15,7 @@ import { useContext } from 'react'
 import { CyclesContext } from '../../contexts/CyclesContext'
 
 export function Home() {
-  const { activeCycle, createNewCycle, interuptCurrentCycle } =
+  const { activeCycle, createNewCycle, interruptCurrentCycle } =
     useContext(CyclesContext)
 
   const newCycleValidationSchema = zod.object({
@@ -46,8 +46,8 @@ export function Home() {
     reset()
   }
 
-  function handleInteruptCurrentCycle() {
-    interuptCurrentCycle()
+  function handleInterruptCurrentCycle() {
+    interruptCurrentCycle()
   }
 
   return (
@@ -61,7 +61,7 @@ export function Home() {
         {activeCycle ? (
           <StopCountdownButton
             type="button"
-            onClick={handleInteruptCurrentCycle}
+            onClick={handleInterruptCurrentCycle}
           >
             <HandPalm size={24} />
             Interromper
