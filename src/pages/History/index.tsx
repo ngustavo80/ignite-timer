@@ -4,7 +4,8 @@ import { ptBR } from 'date-fns/locale'
 
 import { CyclesContext } from '../../contexts/CyclesContext'
 
-import { HistoryContainer, HistoryList, Status } from './styles'
+import { EmptyHistory, HistoryContainer, HistoryList, Status } from './styles'
+import { BookOpen } from 'phosphor-react'
 
 export function History() {
   const { cycles } = useContext(CyclesContext)
@@ -15,7 +16,12 @@ export function History() {
 
       <HistoryList>
         {cycles.length <= 0 ? (
-          <h1>Não há nenhum histórico de ciclos</h1>
+          <EmptyHistory>
+            <div>
+              <span>Nenhum histórico a ser exibido</span>
+              <BookOpen size={48} />
+            </div>
+          </EmptyHistory>
         ) : (
           <table>
             <thead>

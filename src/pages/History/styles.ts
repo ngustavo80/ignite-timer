@@ -84,3 +84,25 @@ export const Status = styled.span<StatusProps>`
       props.theme[STATUS_COLORS[props.statusColor]]};
   }
 `
+
+export const EmptyHistory = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    span {
+      color: ${(props) => props.theme['gray-400']};
+      line-height: 2.4;
+    }
+
+    svg {
+      color: ${(props) => props.theme['gray-400']};
+    }
+  }
+`
