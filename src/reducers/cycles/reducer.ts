@@ -17,7 +17,7 @@ interface cycleState {
 }
 
 export function cyclesReducer(state: cycleState, action: any) {
-  const currentActiveCycle = state.cycles.findIndex(
+  const currentActiveCycleIndex = state.cycles.findIndex(
     (cycle) => cycle.id === state.activeCycleId,
   )
 
@@ -29,8 +29,12 @@ export function cyclesReducer(state: cycleState, action: any) {
       })
 
     case ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED: {
+      if (currentActiveCycleIndex < 0) {
+        return state
+      }
+
       return produce(state, (draft) => {
-        draft.cycles[currentActiveCycle].completeDate = new Date()
+        draft.cycles[currentActiveCycleIndex].completeDate = new Date()
         draft.activeCycleId = null
       })
     }
@@ -48,8 +52,12 @@ export function cyclesReducer(state: cycleState, action: any) {
       //   activeCycleId: null,
       // } METODO SEM O IMMER
 
+      if (currentActiveCycleIndex < 0) {
+        return state
+      }
+
       return produce(state, (draft) => {
-        draft.cycles[currentActiveCycle].interruptDate = new Date()
+        draft.cycles[currentActiveCycleIndex].interruptDate = new Date()
         draft.activeCycleId = null
       })
 
